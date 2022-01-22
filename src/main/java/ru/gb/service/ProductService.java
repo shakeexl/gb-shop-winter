@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import ru.gb.dao.CategoryDao;
 import ru.gb.dao.ManufacturerDao;
 import ru.gb.dao.ProductDao;
 import ru.gb.entity.Product;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 public class ProductService {
     private final ProductDao productDao;
     private final ManufacturerDao manufacturerDao;
+    private final CategoryDao categoryDao;
     private final ProductMapper productMapper;
 
     @Transactional(propagation = Propagation.NEVER, isolation = Isolation.DEFAULT)
@@ -37,7 +39,7 @@ public class ProductService {
 
     @Transactional
     public ProductDto save(final ProductDto productDto) {
-        Product product = productMapper.toProduct(productDto, manufacturerDao);
+        Product product = productMapper.toProduct(productDto, manufacturerDao, categoryDao);
         if (product.getId() != null) {
             productDao.findById(productDto.getId()).ifPresent(
                     (p) -> product.setVersion(p.getVersion())
