@@ -6,6 +6,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import ru.gb.entity.common.BaseEntity;
+import ru.gb.entity.common.InfoEntity;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -13,17 +15,11 @@ import java.util.Set;
 
 @Setter
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @EntityListeners(AuditingEntityListener.class)
 @Entity
 @Table(name = "CATEGORY")
-public class Category {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
-    private Long id;
+public class Category extends InfoEntity {
 
     @Column(name = "title")
     private String title;
@@ -36,33 +32,20 @@ public class Category {
     )
     private Set<Product> products;
 
-    @Version
-    @Column(name = "VERSION")
-    private int version;
-    @CreatedBy
-    @Column(name = "CREATED_BY", updatable = false)
-    private String createdBy;
-    @CreatedDate
-    @Column(name = "CREATED_DATE", updatable = false)
-    private LocalDateTime createdDate;
-    @LastModifiedBy
-    @Column(name = "LAST_MODIFIED_BY")
-    private String lastModifiedBy;
-    @LastModifiedDate
-    @Column(name = "LAST_MODIFIED_DATE")
-    private LocalDateTime lastModifiedDate;
-
     @Override
     public String toString() {
         return "Category{" +
-                "id=" + id +
+                "id=" + getId() +
                 ", title='" + title + '\'' +
                 ", products=" + products +
-                ", version=" + version +
-                ", createdBy='" + createdBy + '\'' +
-                ", createdDate=" + createdDate +
-                ", lastModifiedBy='" + lastModifiedBy + '\'' +
-                ", lastModifiedDate=" + lastModifiedDate +
                 '}';
+    }
+
+    @Builder
+    public Category(Long id, int version, String createdBy, LocalDateTime createdDate, String lastModifiedBy,
+                    LocalDateTime lastModifiedDate, String title, Set<Product> products) {
+        super(id, version, createdBy, createdDate, lastModifiedBy, lastModifiedDate);
+        this.title = title;
+        this.products = products;
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import ru.gb.entity.common.InfoEntity;
 import ru.gb.entity.enums.Status;
 
 import javax.persistence.*;
@@ -16,17 +17,12 @@ import java.util.Set;
 
 @Setter
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Entity
 @Table (name = "product")
 @EntityListeners(AuditingEntityListener.class)
-public class Product {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+public class Product extends InfoEntity {
+
     @Column(name = "title")
     private String title;
     @Column(name = "cost")
@@ -45,22 +41,6 @@ public class Product {
     )
     private Set<Category> categories;
 
-    @Version
-    @Column(name = "VERSION")
-    private int version;
-    @CreatedBy
-    @Column(name = "CREATED_BY", updatable = false)
-    private String createdBy;
-    @CreatedDate
-    @Column(name = "CREATED_DATE", updatable = false)
-    private LocalDateTime createdDate;
-    @LastModifiedBy
-    @Column(name = "LAST_MODIFIED_BY")
-    private String lastModifiedBy;
-    @LastModifiedDate
-    @Column(name = "LAST_MODIFIED_DATE")
-    private LocalDateTime lastModifiedDate;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private Status status;
@@ -68,11 +48,24 @@ public class Product {
     @Override
     public String toString() {
         return "Product{" +
-                "id=" + id +
                 ", title='" + title + '\'' +
                 ", cost=" + cost +
                 ", manufactureDate=" + manufactureDate +
 //                ", manufacturer=" + manufacturer.getName() +
                 "}\n";
+    }
+
+
+    @Builder
+    public Product(Long id, int version, String createdBy, LocalDateTime createdDate, String lastModifiedBy,
+                   LocalDateTime lastModifiedDate, String title, BigDecimal cost, LocalDate manufactureDate,
+                   Manufacturer manufacturer, Set<Category> categories, Status status) {
+        super(id, version, createdBy, createdDate, lastModifiedBy, lastModifiedDate);
+        this.title = title;
+        this.cost = cost;
+        this.manufactureDate = manufactureDate;
+        this.manufacturer = manufacturer;
+        this.categories = categories;
+        this.status = status;
     }
 }

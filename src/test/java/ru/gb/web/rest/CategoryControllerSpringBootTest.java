@@ -11,8 +11,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.gb.dao.CategoryDao;
 import ru.gb.web.dto.CategoryDto;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -31,6 +33,9 @@ class CategoryControllerSpringBootTest {
     @Autowired
     ObjectMapper objectMapper;
 
+    @Autowired
+    private CategoryDao categoryDao;
+
     @Test
     @Order(1)
     public void handlePostTest() throws Exception {
@@ -43,6 +48,8 @@ class CategoryControllerSpringBootTest {
                                 )
                         ))
                 .andExpect(status().isCreated());
+
+        assertEquals(1, categoryDao.count());
     }
 
     @Test

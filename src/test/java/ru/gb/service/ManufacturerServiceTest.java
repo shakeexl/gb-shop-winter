@@ -34,14 +34,32 @@ class ManufacturerServiceTest {
     @InjectMocks
     ManufacturerService manufacturerService;
 
+    private final String TEST_USER = "user1";
+
 
     @Test
     public void findAllManufacturersTest() {
         // given
         List<Manufacturer> manufacturers = new ArrayList<>(){{
-            add(new Manufacturer(1L, "Apple", new HashSet<>(), 1, "user1", LocalDateTime.now(), "user1", LocalDateTime.now()));
-            add(new Manufacturer(2L, "Microsoft", new HashSet<>(), 1, "user1", LocalDateTime.now(), "user1", LocalDateTime.now()));
-        }};
+            add(Manufacturer.builder()
+                    .id(1L)
+                    .name("Apple")
+                    .products(new HashSet<>())
+                    .createdBy(TEST_USER)
+                    .createdDate(LocalDateTime.now())
+                    .lastModifiedBy(TEST_USER)
+                    .lastModifiedDate(LocalDateTime.now())
+                    .build());
+
+            add(Manufacturer.builder()
+                    .id(2L)
+                    .name("Microsoft")
+                    .products(new HashSet<>())
+                    .createdBy(TEST_USER)
+                    .createdDate(LocalDateTime.now())
+                    .lastModifiedBy(TEST_USER)
+                    .lastModifiedDate(LocalDateTime.now())
+                    .build());        }};
 
         given(manufacturerDao.findAll()).willReturn(manufacturers);
 
@@ -56,7 +74,15 @@ class ManufacturerServiceTest {
     @Test
     public void saveManufacturer() {
         // given
-        Manufacturer manufacturerFromDao = new Manufacturer(1L, "Apple", new HashSet<>(), 1, "user1", LocalDateTime.now(), "user1", LocalDateTime.now());
+        Manufacturer manufacturerFromDao = Manufacturer.builder()
+                .id(1L)
+                .name("Apple")
+                .products(new HashSet<>())
+                .createdBy(TEST_USER)
+                .createdDate(LocalDateTime.now())
+                .lastModifiedBy(TEST_USER)
+                .lastModifiedDate(LocalDateTime.now())
+                .build();
 
         ManufacturerDto manufacturerDto = new ManufacturerDto(null, "Apple");
 
