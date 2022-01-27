@@ -7,9 +7,9 @@ import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
+import ru.gb.api.manufacturer.dto.ManufacturerDto;
 import ru.gb.dao.ManufacturerDao;
 import ru.gb.entity.Manufacturer;
-import ru.gb.web.dto.ManufacturerDto;
 import ru.gb.web.dto.mapper.ManufacturerMapper;
 
 import java.time.LocalDateTime;
