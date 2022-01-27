@@ -15,17 +15,17 @@ import java.util.List;
 @RequestMapping("/api/v1/category")
 public class CategoryController {
 
-    private final CategoryGateway categoryGateway;
-
-    @GetMapping
-    public List<CategoryDto> getCategoryList() {
-        return categoryGateway.getCategoryList();
-    }
-
-    @GetMapping("/{categoryId}")
-    public ResponseEntity<?> getCategory(@PathVariable("categoryId") Long id) {
-        return categoryGateway.getCategory(id);
-    }
+//    private final CategoryGateway categoryGateway;
+//
+//    @GetMapping
+//    public List<CategoryDto> getCategoryList() {
+//        return categoryGateway.getCategoryList();
+//    }
+//
+//    @GetMapping("/{categoryId}")
+//    public ResponseEntity<?> getCategory(@PathVariable("categoryId") Long id) {
+//        return categoryGateway.getCategory(id);
+//    }
 
 //    @PostMapping
 //    public ResponseEntity<?> handlePost(@Validated @RequestBody CategoryDto categoryDto) {
