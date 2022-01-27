@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 
-@FeignClient(url = "http://127.0.0.1/internal/api/v1/product", name = "CategoryGateway")
-public class ProductGateway {
+@FeignClient(url = "http://127.0.0.1:8080/internal/api/v1/product", name = "ProductGateway")
+public interface ProductGateway {
 
 //    private final ProductService productService;
 //
