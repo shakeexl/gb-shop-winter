@@ -2,9 +2,13 @@ package ru.gb.api.configuration;
 
 import feign.*;
 import feign.codec.ErrorDecoder;
+import feign.httpclient.ApacheHttpClient;
 import feign.optionals.OptionalDecoder;
 import feign.slf4j.Slf4jLogger;
 import lombok.RequiredArgsConstructor;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -14,6 +18,8 @@ import org.springframework.cloud.openfeign.support.ResponseEntityDecoder;
 import org.springframework.cloud.openfeign.support.SpringDecoder;
 import org.springframework.cloud.openfeign.support.SpringEncoder;
 import org.springframework.cloud.openfeign.support.SpringMvcContract;
+import org.springframework.cloud.sleuth.instrument.web.client.feign.OkHttpFeignClientBeanPostProcessor;
+import org.springframework.cloud.sleuth.instrument.web.client.feign.SleuthFeignBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.gb.api.category.api.CategoryGateway;
@@ -32,11 +38,13 @@ public class FeignConfiguration {
 
     private final GbApiProperties gbApiProperties;
     private final ObjectFactory<HttpMessageConverters> messageConverters;
+    private final BeanFactory beanFactory;
 
     @Bean
     public ManufacturerGateway manufacturerGateway() {
 
-        return Feign.builder()
+        //only tracing without connection pool
+        return SleuthFeignBuilder.builder(beanFactory)
                 .encoder(new SpringEncoder(this.messageConverters))
                 .decoder(new OptionalDecoder(new ResponseEntityDecoder(new SpringDecoder(this.messageConverters))))
                 .options(new Request.Options(
@@ -52,6 +60,7 @@ public class FeignConfiguration {
                 ))
                 .errorDecoder(errorDecoder())
                 .contract(new SpringMvcContract())
+                //.client(getClient())
                 .target(ManufacturerGateway.class, gbApiProperties.getEndpoint().getManufacturerUrl());
     }
 
@@ -70,4 +79,31 @@ public class FeignConfiguration {
             return feignException;
         };
     }
+//when you don't need tracing and you must set up connection pool
+//    private Client getClient() {
+//
+//        HttpClientBuilder httpClientBuilder = HttpClients.custom()
+//                .setMaxConnPerRoute(gbApiProperties.getConnection().getMaxConnections())
+//                .setMaxConnTotal(gbApiProperties.getConnection().getMaxConnections());
+//
+//        return new ApacheHttpClient(httpClientBuilder.build());
+//    }
+
+    // i to i eto
+//    @Bean
+//    public OkHttpClient okHttpClient() {
+//        return new Builder()
+//                .connectTimeout(properties.getHttpTimeoutMillis(), TimeUnit.MILLISECONDS)
+//                .readTimeout(properties.getHttpTimeoutMillis(), TimeUnit.MILLISECONDS)
+//                .writeTimeout(properties.getHttpTimeoutMillis(), TimeUnit.MILLISECONDS)
+//                .connectionPool(new ConnectionPool(properties.getHttpPoolSize(),
+//                        properties.getHttpKeepAliveMillis(), TimeUnit.MILLISECONDS))
+//                .build();
+//    }
+//
+//    @Bean
+//    static OkHttpFeignClientBeanPostProcessor okHttpFeignClientBeanPostProcessor(
+//            BeanFactory beanFactory) {
+//        return new OkHttpFeignClientBeanPostProcessor(beanFactory);
+//    }
 }

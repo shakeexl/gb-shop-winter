@@ -80,7 +80,7 @@ class ManufacturerControllerTest {
         given(manufacturerService.findAll()).willReturn(manufacturerDtoList);
 
         // when
-        List<ManufacturerDto> manufacturerList = manufacturerController.getManufacturerList();
+        List<ManufacturerDto> manufacturerList = manufacturerController.getManufacturerList(any());
 
         // then
         then(manufacturerService).should().findAll();

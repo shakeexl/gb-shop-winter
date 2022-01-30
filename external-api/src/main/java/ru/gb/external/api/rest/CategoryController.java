@@ -1,6 +1,7 @@
 package ru.gb.external.api.rest;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -10,17 +11,19 @@ import ru.gb.api.category.dto.CategoryDto;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/category")
 public class CategoryController {
 
-//    private final CategoryGateway categoryGateway;
-//
-//    @GetMapping
-//    public List<CategoryDto> getCategoryList() {
-//        return categoryGateway.getCategoryList();
-//    }
+    private final CategoryGateway categoryGateway;
+
+    @GetMapping
+    public List<CategoryDto> getCategoryList() {
+        log.info("Try to get category list");
+        return categoryGateway.getCategoryList();
+    }
 //
 //    @GetMapping("/{categoryId}")
 //    public ResponseEntity<?> getCategory(@PathVariable("categoryId") Long id) {
